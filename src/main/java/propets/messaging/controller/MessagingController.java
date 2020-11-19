@@ -29,22 +29,22 @@ public class MessagingController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") String postId, @RequestBody PostDto postDto) {
+	public ResponseEntity<PostResponseDto> updatePost(@PathVariable(value = "id") String postId, @RequestBody PostDto postDto) {
 		return messagingService.updatePost(postId, postDto);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<PostResponseDto> deletePost(@PathVariable("id") String postId) {
+	public ResponseEntity<PostResponseDto> deletePost(@PathVariable(value = "id") String postId) {
 		return messagingService.deletePost(postId);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PostResponseDto> getPostById(@PathVariable("id") String postId) {
+	public ResponseEntity<PostResponseDto> getPostById(@PathVariable(value = "id") String postId) {
 		return messagingService.getPostById(postId);
 	}
 	
 	@GetMapping("/view")
-	public Iterable<PostResponseDto> getPosts(@RequestParam Integer itemsOnPage, @RequestParam("currentPage") Integer nPage) {
+	public Iterable<PostResponseDto> getPosts(@RequestParam Integer itemsOnPage, @RequestParam(value = "currentPage") Integer nPage) {
 		return messagingService.getPosts(itemsOnPage, nPage);
 	}
 	
