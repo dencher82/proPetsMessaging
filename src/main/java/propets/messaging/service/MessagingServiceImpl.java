@@ -1,9 +1,15 @@
 package propets.messaging.service;
 
-import java.awt.print.Pageable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +18,6 @@ import org.springframework.stereotype.Service;
 import propets.messaging.dao.MessagingRepository;
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
-import propets.messaging.dto.PostsDto;
 import propets.messaging.exceptions.PostNotFoundException;
 import propets.messaging.model.Post;
 
@@ -68,15 +73,17 @@ public class MessagingServiceImpl implements MessagingService {
 	}
 
 	@Override
-	public Pageable getPosts(Integer itemsOnPage, Integer nPage) {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterable<PostResponseDto> getPosts(Integer itemsOnPage, Integer nPage) {
+		Pageable pageable = PageRequest.of(nPage, itemsOnPage);
+		Page<Post> page = repository.findAll(pageable);
+		return page.getContent().stream().map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Iterable<PostResponseDto> getUserDate(PostsDto postsDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterable<PostResponseDto> getUserDate(String[] posts) {
+		List<Post> postList	= new ArrayList<Post>();		
+		Arrays.stream(posts).forEach(post -> postList.add(repository.findById(post).orElse(null)));
+		return postList.stream().map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
 	}
 
 	private ResponseEntity<PostResponseDto> createResponseEntity(Post post) {

@@ -1,7 +1,5 @@
 package propets.messaging.controller;
 
-import java.awt.print.Pageable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,11 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
-import propets.messaging.dto.PostsDto;
 import propets.messaging.service.MessagingService;
 
 @RestController
@@ -46,13 +44,13 @@ public class MessagingController {
 	}
 	
 	@GetMapping("/view")
-	public Pageable getPosts(@PathVariable Integer itemsOnPage, @PathVariable Integer nPage) {
+	public Iterable<PostResponseDto> getPosts(@RequestParam Integer itemsOnPage, @RequestParam("currentPage") Integer nPage) {
 		return messagingService.getPosts(itemsOnPage, nPage);
 	}
 	
 	@PostMapping("/userdata")
-	public 	Iterable<PostResponseDto> getUserDate(@RequestBody PostsDto postsDto) {
-		return messagingService.getUserDate(postsDto);
+	public 	Iterable<PostResponseDto> getUserDate(@RequestBody String[] posts) {
+		return messagingService.getUserDate(posts);
 	}
 	
 }

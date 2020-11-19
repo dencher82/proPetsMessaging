@@ -1,12 +1,9 @@
 package propets.messaging.service;
 
-import java.awt.print.Pageable;
-
 import org.springframework.http.ResponseEntity;
 
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
-import propets.messaging.dto.PostsDto;
 
 public interface MessagingService {
 	
@@ -18,8 +15,8 @@ public interface MessagingService {
 	
 	ResponseEntity<PostResponseDto> getPostById(String postId);
 	
-	Pageable getPosts(Integer itemsOnPage, Integer nPage);
+	Iterable<PostResponseDto> getPosts(Integer itemsOnPage, Integer nPage);
 		
-	Iterable<PostResponseDto> getUserDate(PostsDto postsDto);
+	Iterable<PostResponseDto> getUserDate(String[] posts);
 	
 }

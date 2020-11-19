@@ -41,27 +41,31 @@ public class ValidationFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
+		String path = request.getServletPath();
 		String xToken = request.getHeader(TOKEN_HEADER);
-		if (xToken != null) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(TOKEN_HEADER, xToken);
-			try {
-				RequestEntity<String> requestEntity = new RequestEntity<String>(headers, HttpMethod.GET, new URI(validationUrl));
-				ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
-				request = new WrapperRequest(request, responseEntity.getBody());
-				response.addHeader(TOKEN_HEADER, responseEntity.getHeaders().getFirst(TOKEN_HEADER));				
-			} catch (BadRequest e) {
-				e.printStackTrace();
-				response.sendError(403);
-				return;
-			} catch (Exception e) {
-				e.printStackTrace();
+		if (!"/message/en/v1/userdata".equals(path)) {
+			if (xToken != null) {
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(TOKEN_HEADER, xToken);
+				try {
+					RequestEntity<String> requestEntity = new RequestEntity<String>(headers, HttpMethod.GET,
+							new URI(validationUrl));
+					ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+					request = new WrapperRequest(request, responseEntity.getBody());
+					response.addHeader(TOKEN_HEADER, responseEntity.getHeaders().getFirst(TOKEN_HEADER));
+				} catch (BadRequest e) {
+					e.printStackTrace();
+					response.sendError(403);
+					return;
+				} catch (Exception e) {
+					e.printStackTrace();
+					response.sendError(401);
+					return;
+				}
+			} else {
 				response.sendError(401);
 				return;
-			}
-		} else {
-			response.sendError(401);
-			return;
+			} 
 		}
 		
 		chain.doFilter(request, response);
