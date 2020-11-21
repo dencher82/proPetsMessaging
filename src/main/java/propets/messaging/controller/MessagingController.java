@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
+import propets.messaging.dto.PostsPageableDto;
 import propets.messaging.service.MessagingService;
 
 @RestController
@@ -44,7 +45,7 @@ public class MessagingController {
 	}
 	
 	@GetMapping("/view")
-	public Iterable<PostResponseDto> getPosts(@RequestParam Integer itemsOnPage, @RequestParam(value = "currentPage") Integer nPage) {
+	public PostsPageableDto getPosts(@RequestParam Integer itemsOnPage, @RequestParam(value = "currentPage") Integer nPage) {
 		return messagingService.getPosts(itemsOnPage, nPage);
 	}
 	

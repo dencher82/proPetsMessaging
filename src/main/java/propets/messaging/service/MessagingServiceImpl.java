@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import propets.messaging.dao.MessagingRepository;
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
+import propets.messaging.dto.PostsPageableDto;
 import propets.messaging.exceptions.PostNotFoundException;
 import propets.messaging.model.Post;
 
@@ -73,17 +74,19 @@ public class MessagingServiceImpl implements MessagingService {
 	}
 
 	@Override
-	public Iterable<PostResponseDto> getPosts(Integer itemsOnPage, Integer nPage) {
+	public PostsPageableDto getPosts(Integer itemsOnPage, Integer nPage) {
 		Pageable pageable = PageRequest.of(nPage, itemsOnPage);
 		Page<Post> page = repository.findAll(pageable);
-		return page.getContent().stream().map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
+		long itemsTotal = page.getTotalElements();
+		List<PostResponseDto> posts = page.getContent().stream().map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
+		return new PostsPageableDto(itemsOnPage, nPage, itemsTotal, posts);
 	}
 
 	@Override
 	public Iterable<PostResponseDto> getUserDate(String[] posts) {
 		List<Post> postList	= new ArrayList<Post>();		
 		Arrays.stream(posts).forEach(post -> postList.add(repository.findById(post).orElse(null)));
-		return postList.stream().map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
+		return postList.stream().filter(post -> post != null).map(post -> mapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
 	}
 
 	private ResponseEntity<PostResponseDto> createResponseEntity(Post post) {

@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import propets.messaging.dto.PostDto;
 import propets.messaging.dto.PostResponseDto;
+import propets.messaging.dto.PostsPageableDto;
 
 public interface MessagingService {
 	
@@ -15,7 +16,7 @@ public interface MessagingService {
 	
 	ResponseEntity<PostResponseDto> getPostById(String postId);
 	
-	Iterable<PostResponseDto> getPosts(Integer itemsOnPage, Integer nPage);
+	PostsPageableDto getPosts(Integer itemsOnPage, Integer nPage);
 		
 	Iterable<PostResponseDto> getUserDate(String[] posts);
 	
