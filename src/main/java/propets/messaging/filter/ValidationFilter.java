@@ -51,7 +51,7 @@ public class ValidationFilter implements Filter {
 					RequestEntity<String> requestEntity = new RequestEntity<String>(headers, HttpMethod.GET,
 							new URI(validationUrl));
 					ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
-					request = new WrapperRequest(request, responseEntity.getBody());
+					request = new WrapperRequest(request, responseEntity.getHeaders().getFirst(LOGIN_HEADER));
 					response.addHeader(TOKEN_HEADER, responseEntity.getHeaders().getFirst(TOKEN_HEADER));
 				} catch (BadRequest e) {
 					e.printStackTrace();
